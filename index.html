@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elementary Geometry Tangram Creator | STEM Education Tool</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            max-width: 700px;
+            width: 100%;
+            animation: slideIn 0.6s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            color: #7f8c8d;
+            font-size: 1rem;
+            margin-bottom: 20px;
+        }
+
+        .specialist-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #00b894, #00cec9);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .single-control {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            text-align: center;
+        }
+
+        .single-control label {
+            display: block;
+            font-weight: 600;
+            color: #34495e;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+
+        .single-control input {
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 1.2rem;
+            width: 120px;
+            text-align: center;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .single-control input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15);
+        }
+
+        .generate-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 18px 50px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: block;
+            margin: 0 auto 30px auto;
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
+        }
+
+        .generate-btn:active {
+            transform: translateY(0);
+        }
+
+        .puzzle-display {
+            background: linear-gradient(45deg, #f8f9fa, #e9ecef);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            text-align: center;
+            border: 2px dashed #dee2e6;
+            min-height: 200px;
+            position: relative;
+        }
+
+        .puzzle-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .puzzle-item {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .puzzle-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .puzzle-item h4 {
+            color: #34495e;
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+
+        .puzzle-icon {
+            font-size: 3rem;
+            margin: 10px 0;
+            display: block;
+        }
+
+        .geometry-focus {
+            background: #e8f4fd;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+            font-size: 0.8rem;
+            padding: 5px 10px;
+            border-radius: 15px;
+            display: inline-block;
+        }
+
+        .stats-simple {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin: 30px 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .stat-card h3 {
+            font-size: 1.6rem;
+            margin-bottom: 5px;
+            font-weight: 700;
+        }
+
+        .stat-card p {
+            opacity: 0.9;
+            font-size: 0.85rem;
+        }
+
+        .success-message {
+            background: linear-gradient(135deg, #00b894, #00cec9);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            text-align: center;
+            display: none;
+            animation: bounce 0.6s ease-out;
+        }
+
+        @keyframes bounce {
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.05); }
+            70% { transform: scale(0.9); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .geometry-tip {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 12px;
+            padding: 18px;
+            margin: 25px 0;
+            color: #856404;
+        }
+
+        .geometry-tip strong {
+            color: #b8860b;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+            color: #7f8c8d;
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 25px;
+            }
+
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .puzzle-grid {
+                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+                gap: 12px;
+            }
+
+            .puzzle-icon {
+                font-size: 2.5rem;
+            }
+        }
+
+        /* Expandable sections for future upgrades */
+        .upgrade-section {
+            display: none;
+            border-top: 2px solid #e0e0e0;
+            padding-top: 20px;
+            margin-top: 20px;
+        }
+
+        .upgrade-section.active {
+            display: block;
+        }
+    /* Main container */
+       .ad-container {
+     margin: 20px auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(8px);
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    transition: transform 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    max-width: 100%;
+  }
+
+  .ad-container:hover {
+    transform: scale(1.02);
+  }
+
+  /* Label */
+  .ad-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #667eea;
+    position: absolute;
+    top: -22px;
+    text-align: center;
+    width: 100%;
+    letter-spacing: 0.5px;
+  }
+
+  /* Ad content flex wrapper */
+  .ad-content {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  /* Slots inside the ad */
+  .ad-slot {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: white;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    text-align: center;
+  }
+
+  /* Default = Desktop 2x1 */
+  .ad-container {
+    width: 600px;
+    height: 250px;
+  }
+
+  /* Tablet view (fallback to 300x250) */
+  @media (max-width: 1024px) {
+    .ad-container {
+      width: 300px;
+      height: 250px;
+    }
+    .ad-content {
+      flex-direction: column;
+    }
+    .ad-slot {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  /* Mobile view (300x100) */
+  @media (max-width: 768px) {
+    .ad-container {
+      width: 300px;
+      height: 100px;
+    }
+    .ad-content {
+      flex-direction: row;
+    }
+    .ad-slot {
+      font-size: 0.8rem;
+    }
+  }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📐 Elementary Geometry Tangrams</h1>
+            <div class="specialist-badge">Specialist Tool for K-5 Shapes & Geometry</div>
+            <p>Create shape recognition puzzles for elementary students • Focus on basic geometry concepts</p>
+        </div>
+
+        <div class="single-control">
+            <label for="puzzleCount">How many geometry puzzles do you need?</label>
+            <input type="number" id="puzzleCount" value="5" min="1" max="10">
+        </div>
+
+        <button class="generate-btn" onclick="generateGeometryPuzzles()">
+            🎯 Create Geometry Puzzles
+        </button>
+
+        <div class="puzzle-display" id="puzzleDisplay">
+            <h3 style="color: #7f8c8d; margin-bottom: 20px;">Your Elementary Geometry Tangram Puzzles</h3>
+            <p style="color: #95a5a6; font-style: italic;">Perfect for teaching basic shapes, spatial reasoning, and problem-solving</p>
+        </div>
+
+        <div class="stats-simple">
+            <div class="stat-card">
+                <h3 id="totalPuzzles">0</h3>
+                <p>Puzzles Created</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="learningTime">0 min</h3>
+                <p>Learning Time</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="shapeCount">0</h3>
+                <p>Shapes Practiced</p>
+            </div>
+        </div>
+
+        <div class="success-message" id="successMessage">
+            <h3>🎉 Geometry Puzzles Ready!</h3>
+            <p>Your elementary tangram puzzles are perfect for classroom use!</p>
+        </div>
+
+        <div class="geometry-tip">
+            <strong>💡 Teaching Focus:</strong> <span id="geometryTip">These tangram puzzles help students identify basic shapes (triangles, squares, parallelograms) and understand how shapes combine to form larger figures.</span>
+        </div>
+
+        <!-- Hidden sections for future upgrades -->
+        <div class="upgrade-section" id="gradeUpgrade">
+            <h4>🚀 Coming Soon: Middle School & High School Options</h4>
+        </div>
+
+        <div class="upgrade-section" id="stemUpgrade">
+            <h4>🧬 Coming Soon: Advanced STEM Integration</h4>
+        </div>
+
+        <div class="footer">
+           <!-- Advertisement Block -->
+          Advertisement
+          <div class="ad-container">
+         <div class="ad-label">ADVERTISEMENT</div>
+        <div class="ad-content">
+       <div class="ad-slot">
+         Text / Image Here
+       </div>
+      <div class="ad-slot">
+          Video / Extra Info Here
+      </div>
+     </div>
+   </div>
+         <p>Elementary Geometry Specialist Tool • Created by Kidcodemates • Building STEM Education • © 2025</p>
+        </div>
+    </div>
+
+
+ <script>
+
+        // Simple data tracking
+        let puzzleData = {
+            totalGenerated: 0,
+            sessionCount: 0
+        };
+
+        // Elementary geometry puzzle types (specialist focus)
+        const elementaryPuzzles = [
+            { name: 'Flying Bird', icon: '🐦', shapes: 6, mainShapes: ['2 Large Triangles', '1 Medium Triangle', '2 Small Triangles'] },
+            { name: 'Simple House', icon: '🏠', shapes: 5, mainShapes: ['2 Large Triangles', '1 Medium Triangle', '1 Square', '1 Parallelogram'] },
+            { name: 'Basic Boat', icon: '⛵', shapes: 4, mainShapes: ['1 Large Triangle', '1 Medium Triangle', '1 Square', '1 Parallelogram'] },
+            { name: 'Flower Pot', icon: '🌸', shapes: 4, mainShapes: ['1 Large Triangle', '1 Medium Triangle', '1 Square', '1 Small Triangle'] },
+            { name: 'Tall Tree', icon: '🌳', shapes: 4, mainShapes: ['2 Large Triangles', '1 Medium Triangle', '1 Small Triangle'], },
+            { name: 'Sitting Cat', icon: '🐱', shapes: 5, mainShapes: ['2 Large Triangles', '1 Medium Triangle', '1 Square', '1 Small Triangle'] },
+            { name: 'Little Fish', icon: '🐟', shapes: 5, mainShapes: ['2 Large Triangles', '1 Medium Triangle', '2 Small Triangles'] },
+            { name: 'Running Dog', icon: '🐕', shapes: 6, mainShapes: ['2 Large Triangles', '1 Medium Triangle', '2 Small Triangles', '1 Square'] },
+            { name: 'Whale', icon: '🐋', shapes: 5, mainShapes: ['2 Large Triangles', '1 Medium Triangle', '1 Square', '1 Parallelogram'] },
+            { name: 'Stairs', icon: '📐', shapes: 4, mainShapes: ['1 Large Triangle', '1 Medium Triangle', '1 Square', '1 Parallelogram']},
+            { name: 'Mountains', icon: '⛰️', shapes: 3, mainShapes: ['2 Large Triangles', '1 Medium Triangle'], },
+            { name: 'Plane', icon: '✈️', shapes: 5, mainShapes: ['2 Large Triangles', '1 Medium Triangle', '1 Square', '1 Small Triangle'] }
+        ];
+
+        // Predefined puzzle sets
+        const puzzleSets = {
+            1: [{ name: 'Flying Bird', icon: '🐦', shapes: 6, mainShapes: ['2 Large Triangles', '1 Medium Triangle', '2 Small Triangles', '1 Square', '1 Optional Circle'] }],
+            2: [
+                { name: 'Simple House', icon: '🏠', shapes: 5, mainShapes: ['2 Large Triangles', '1 Medium Triangle', '1 Square', '1 Parallelogram'] },
+                { name: 'Basic Boat', icon: '⛵', shapes: 4, mainShapes: ['1 Large Triangle', '1 Medium Triangle', '1 Square', '1 Parallelogram', ] }
+            ],
+            3: [
+                { name: 'Flower Pot', icon: '🌸', shapes: 4, mainShapes: ['1 Large Triangle', '1 Medium Triangle', '1 Square', '1 Small Triangle', '1 Optional Circle'] },
+                { name: 'Tall Tree', icon: '🌳', shapes: 4, mainShapes: ['2 Large Triangles', '1 Medium Triangle', '1 Small Triangle', '1 Optional Circle'] },
+                { name: 'Sitting Cat', icon: '🐱', shapes: 5, mainShapes: ['2 Large Triangles', '1 Medium Triangle', '1 Square', '1 Small Triangle'] }
+            ],
+            4: [
+                { name: 'Tall Tree', icon: '🌳', shapes: 4, mainShapes: ['2 Large Triangles', '1 Medium Triangle', '1 Small Triangle','1 Optional Circle'] },
+                { name: 'Basic Boat', icon: '⛵', shapes: 4, mainShapes: ['1 Large Triangle', '1 Medium Triangle', '1 Square', '1 Parallelogram'] },
+                { name: 'Sitting Cat', icon: '🐱', shapes: 5, mainShapes: ['2 Large Triangles', '1 Medium Triangle', '1 Square', '1 Small Triangle'] },
+                { name: 'Flying Bird', icon: '🐦', shapes: 6, mainShapes: ['2 Large Triangles', '1 Medium Triangle', '2 Small Triangles'] }
+            ],
+            5: [
+                { name: 'Tall Tree', icon: '🌳', shapes: 4, mainShapes: ['2 Large Triangles', '1 Medium Triangle', '1 Small Triangle','1 Optional Circle'] },
+                { name: 'Sitting Cat', icon: '🐱', shapes: 5, mainShapes: ['2 Large Triangles', '1 Medium Triangle', '1 Square', '1 Small Triangle'] },
+                { name: 'Little Fish', icon: '🐟', shapes: 5, mainShapes: ['2 Large Triangles', '1 Medium Triangle', '2 Small Triangles'] },
+                { name: 'Flying Bird', icon: '🐦', shapes: 6, mainShapes: ['2 Large Triangles', '1 Medium Triangle', '2 Small Triangles', '1 Square',] },
+                { name: 'Running Dog', icon: '🐕', shapes: 6, mainShapes: ['2 Large Triangles', '1 Medium Triangle', '2 Small Triangles', '1 Square',] }
+            ],
+            6: [
+                { name: 'Flying Bird', icon: '🐦', shapes: 6, mainShapes: ['2 Large Triangles', '1 Medium Triangle', '2 Small Triangles', '1 Square'] },
+                { name: 'Sitting Cat', icon: '🐱', shapes: 5, mainShapes: ['2 Large Triangles', '1 Medium Triangle', '1 Square', '1 Small Triangle'] },
+                { name: 'Basic Boat', icon: '⛵', shapes: 4, mainShapes: ['1 Large Triangle', '1 Medium Triangle', '1 Square', '1 Parallelogram'] },
+                { name: 'Simple House', icon: '🏠', shapes: 5, mainShapes: ['2 Large Triangles', '1 Medium Triangle', '1 Square', '1 Parallelogram'] },
+                { name: 'Running Dog', icon: '🐕', shapes: 6, mainShapes: ['2 Large Triangles', '1 Medium Triangle', '2 Small Triangles', '1 Square'] },
+                { name: 'Tall Tree', icon: '🌳', shapes: 4, mainShapes: ['2 Large Triangles', '1 Medium Triangle', '1 Small Triangle'] }  ],
+            7: [{ name: 'Whale', icon: '🐋', shapes: 5, mainShapes: ['2 Large Triangles', '1 Medium Triangle', '1 Square', '1 Parallelogram'] }],
+            8: [{ name: 'Mountains', icon: '⛰️', shapes: 3, mainShapes: ['2 Large Triangles', '1 Medium Triangle'] }],
+            9: [{ name: 'Stairs', icon: '📐', shapes: 4, mainShapes: ['1 Large Triangle', '1 Medium Triangle', '1 Square', '1 Parallelogram'] }],
+            10: [{ name: 'Plane', icon: '✈️', shapes: 5, mainShapes: ['2 Large Triangles', '1 Medium Triangle', '1 Square', '1 Small Triangle'] }]
+        };
+
+        function generateGeometryPuzzles() {
+            const puzzleCount = parseInt(document.getElementById('puzzleCount').value);
+
+            // Simple validation
+            if (puzzleCount < 1 || puzzleCount > 10) {
+                alert('Please choose between 1-10 puzzles for optimal learning');
+                return;
+            }
+
+            // Update tracking data
+            puzzleData.totalGenerated += puzzleCount;
+            puzzleData.sessionCount++;
+
+            // Get predefined puzzle set or random selection
+            const selectedPuzzles = puzzleSets[puzzleCount] || getRandomPuzzles(puzzleCount);
+
+            // Generate display
+            displayPuzzles(selectedPuzzles, puzzleCount);
+
+            // Update statistics
+            updateStats(puzzleCount, selectedPuzzles);
+
+            // Show success message
+            showSuccess();
+
+            // Update teaching tip
+            updateTeachingTip(puzzleCount);
+        }
+
+        function getRandomPuzzles(count) {
+            const shuffled = [...elementaryPuzzles].sort(() => 0.5 - Math.random());
+            return shuffled.slice(0, count);
+        }
+
+        function displayPuzzles(puzzles, puzzleCount) {
+            const display = document.getElementById('puzzleDisplay');
+            
+            let html = `
+                <h3 style="color: #2c3e50; margin-bottom: 20px;">
+                    Puzzle Set ${puzzleCount}: ${puzzles.length} Elementary Geometry Tangram${puzzles.length > 1 ? 's' : ''}
+                </h3>
+                <div class="puzzle-grid">
+            `;
+
+            puzzles.forEach((puzzle, index) => {
+                const shapesList = puzzle.mainShapes.join(', ');
+                html += `
+                    <div class="puzzle-item">
+                        <h4>Puzzle ${puzzleCount}${puzzles.length > 1 ? `.${index + 1}` : ''}</h4>
+                        <span class="puzzle-icon">${puzzle.icon}</span>
+                        <p style="color: #7f8c8d; font-size: 0.9rem; margin: 8px 0; font-weight: 600;">${puzzle.name}</p>
+                        <div class="geometry-focus">${puzzle.shapes} shapes total</div>
+                        <div style="background: #e8f5e8; border: 1px solid #4caf50; color: #2e7d32; font-size: 0.75rem; padding: 8px; border-radius: 8px; margin-top: 10px; text-align: left;">
+                            <strong>Main Shapes:</strong><br>
+                            ${shapesList}
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += `</div>`;
+
+            // Add learning objective
+            html += `
+                <div style="background: linear-gradient(135deg, #74b9ff, #0984e3); color: white; padding: 20px; border-radius: 15px; margin: 20px 0;">
+                    <h4>🎯 Learning Goal for Puzzle Set ${puzzleCount}</h4>
+                    <p>Students will identify and work with basic geometric shapes (triangles, squares, parallelograms) and understand how they combine to create ${puzzles.length > 1 ? 'multiple familiar objects' : 'a familiar object'} through hands-on tangram manipulation.</p>
+                </div>
+            `;
+
+            display.innerHTML = html;
+        }
+
+        function updateStats(puzzleCount, puzzles) {
+            document.getElementById('totalPuzzles').textContent = puzzleData.totalGenerated;
+            document.getElementById('learningTime').textContent = puzzleCount * 3 + ' min';
+            
+            const totalShapes = puzzles.reduce((sum, puzzle) => sum + puzzle.shapes, 0);
+            document.getElementById('shapeCount').textContent = totalShapes;
+        }
+
+        function showSuccess() {
+            const successMsg = document.getElementById('successMessage');
+            successMsg.style.display = 'block';
+            setTimeout(() => {
+                successMsg.style.display = 'none';
+            }, 3000);
+        }
+
+        function updateTeachingTip(count) {
+            const tips = {
+                small: "With fewer puzzles, spend more time discussing each shape and its properties. Ask students to name each triangle, square, and parallelogram.",
+                medium: "Perfect amount for a classroom session! Have students work in pairs and discuss the shapes they identify in each puzzle.",
+                large: "Great for extended learning! Consider breaking into two sessions, focusing on triangles in the first session and other shapes in the second."
+            };
+
+            let tipKey = count <= 3 ? 'small' : count <= 6 ? 'medium' : 'large';
+            document.getElementById('geometryTip').textContent = tips[tipKey];
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add real-time feedback
+            document.getElementById('puzzleCount').addEventListener('input', function() {
+                const count = parseInt(this.value);
+                if (count > 10) {
+                    this.style.borderColor = '#e74c3c';
+                } else {
+                    this.style.borderColor = '#e0e0e0';
+                }
+            });
+
+            // Future upgrade hooks (easily expandable)
+            // Uncomment these when adding new features:
+            // document.getElementById('gradeUpgrade').classList.add('active');
+            // document.getElementById('stemUpgrade').classList.add('active');
+        });
+
+        // UPGRADE PATH FUNCTIONS (Ready for expansion)
+        // Uncomment and customize when adding new features
+
+        /*
+        function addGradeLevels() {
+            // Add middle school and high school options
+        }
+
+        function addSTEMFocus() {
+            // Add fractions, area, angles options
+        }
+
+        function addDifficultyLevels() {
+            // Add beginner, intermediate, advanced
+        }
+        */
+ 
+  </script>
+</body>
+</html>
